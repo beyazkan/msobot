@@ -6,7 +6,6 @@ import time
 import datetime
 import asyncio
 from itertools import cycle
-import sqlite3
 
 times = [
     str(datetime.time(1, 45)), str(datetime.time(15, 35)), str(datetime.time(23, 15))
@@ -134,84 +133,6 @@ async def help():
 @client.command()
 async def logout():
     await client.logout()
-
-
-@client.command(pass_context=True)
-async def add(ctx, name, image):
-    baglanti = sqlite3.connect('veriler.db')
-
-    if (baglanti):
-        print("Bağlantı Başarılı")
-    else:
-        print("Bağlantı Başarısız!")
-
-    cursor = baglanti.cursor()
-    sorgu = "INSERT INTO items (name, image) VALUES (?, ?)"
-    cursor.execute(sorgu, (name, image,))
-    baglanti.commit()
-    baglanti.close()
-
-    embed = discord.Embed(
-        title=name,
-        description='Veritabanına item kayıt oldu',
-        colour=discord.Colour.blue()
-    )
-    embed.set_footer(text='Dragon Guild')
-    embed.set_image(url=image)
-    embed.set_thumbnail(url=image)
-
-    await client.say(embed=embed)
-
-
-@client.command(pass_context=True)
-async def item(ctx, name=None):
-    if name:
-        baglanti = sqlite3.connect('veriler.db')
-        baglanti.row_factory = sqlite3.Row
-
-        cursor = baglanti.cursor()
-        sorgu = "SELECT * FROM items WHERE name LIKE '%" + name + "%'"
-        result = cursor.execute(sorgu)
-        veri = result.fetchall()
-
-        if veri:
-            for item in veri:
-                embed = discord.Embed(
-                    title=item['name'],
-                    description='İtem ID: {}'.format(item['id']),
-                    colour=discord.Colour.blue()
-                )
-                embed.set_footer(text='Dragon Guild')
-                embed.set_image(url=item['image'])
-
-                await client.say(embed=embed)
-        else:
-            await client.say("Aradığınız item bulunamadı.")
-
-        baglanti.close()
-    else:
-        baglanti = sqlite3.connect('veriler.db')
-        baglanti.row_factory = sqlite3.Row
-
-        cursor = baglanti.cursor()
-        sorgu = "SELECT count(*) FROM items"
-        result = cursor.execute(sorgu).fetchone()
-
-        if result:
-            await client.say("Toplam Kayıtlı İtem Sayısı: {}".format(result[0]))
-            embed = discord.Embed(
-                title='!item Komut Kullanımı',
-                description='!item "item_adi" "resim_url"',
-                colour=discord.Colour.red()
-            )
-            embed.set_footer(text='')
-
-            await client.say(embed=embed)
-        else:
-            await client.say("Aradığınız item bulunamadı.")
-
-        baglanti.close()
-
 
 @client.command(pass_context=True)
 async def join(ctx):
