@@ -1,5 +1,5 @@
 """
-    Proje Adı: BDO TOOLS Discord
+    Proje Adı: msobot Discord Botu
 
 """
 
@@ -13,8 +13,6 @@ class Help():
         self.ekle("Tüm Komutlar '!' ile başlar;\n")
         self.ekle("!help: komutu ile kullanabileceğiniz komutların listesini görürsünüz.\n")
         self.ekle("!clear {sayı}: komutu ile yazılı kanalda mesajlarınızı silebilirsiniz.\n")
-        self.ekle("!item 'item_adi': Kayıtlı itemi aramak için bu komutu kullanabilirsiniz.\n")
-        self.ekle("!add 'item_adi', 'resim_url': Yeni item kaydetmek için bu komutu kullanabilirsiniz.\n")
         self.stringadd()
         self.Mesaj()
 
