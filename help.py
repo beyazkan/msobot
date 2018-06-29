@@ -10,9 +10,9 @@ class Help():
     mesaj = ""
 
     def __init__(self):
-        self.ekle("Tüm Komutlar '!' ile başlar;\n")
-        self.ekle("!help: komutu ile kullanabileceğiniz komutların listesini görürsünüz.\n")
-        self.ekle("!clear {sayı}: komutu ile yazılı kanalda mesajlarınızı silebilirsiniz.\n")
+        self.ekle("Tüm Komutlar '_' ile başlar;\n")
+        self.ekle("help: komutu ile kullanabileceğiniz komutların listesini görürsünüz.\n")
+        self.ekle("clear {sayı}: komutu ile yazılı kanalda mesajlarınızı silebilirsiniz.\n")
         self.stringadd()
         self.Mesaj()
 

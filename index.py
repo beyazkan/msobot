@@ -4,7 +4,7 @@ from help import Help
 import os
 
 TOKEN = os.environ.get('BOT_TOKEN')
-BOT_PREFIX = "!"
+BOT_PREFIX = "_"
 
 client = commands.Bot(command_prefix=BOT_PREFIX)
 client.remove_command('help')
