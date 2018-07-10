@@ -13,6 +13,7 @@ class Help():
         self.ekle("Tüm Komutlar '_' ile başlar;\n")
         self.ekle("help: komutu ile kullanabileceğiniz komutların listesini görürsünüz.\n")
         self.ekle("clear {sayı}: komutu ile yazılı kanalda mesajlarınızı silebilirsiniz.\n")
+        self.ekle("echo {yazı}: komutu ile yazdığınız bir şeyi bot tekrarlar.\n")
         self.stringadd()
         self.Mesaj()
 
