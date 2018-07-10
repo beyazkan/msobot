@@ -1,6 +1,7 @@
 ﻿import discord
 from discord.ext import commands
 from help import Help
+import json
 import os
 
 TOKEN = os.environ.get('BOT_TOKEN')
@@ -8,23 +9,6 @@ BOT_PREFIX = "_"
 
 client = commands.Bot(command_prefix=BOT_PREFIX)
 client.remove_command('help')
-
-players = {}
-
-
-def get_channel(channels, channel_name):
-    for channel in client.get_all_channels():
-        if channel.name == channel_name:
-            return channel
-    return None
-
-
-def get_server(servers, server_name):
-    for server in servers:
-        if server.name == server_name:
-            return server
-    return None
-
 
 @client.event
 async def on_ready():
@@ -35,18 +19,6 @@ async def on_ready():
     print(str(len(set(client.get_all_members()))) + " tane kullanıcıya erişiyor.")
 
     await client.change_presence(game=discord.Game(name='Doktorculuk'))
-
-
-# Todo: Varsayılan Rolü belirleme
-# @client.event
-# async def on_member_join(member):
-#     role = discord.utils.get(member.server.roles, name="Deneme")
-#     await  client.add_rules(member, role)
-
-@client.command()
-async def ping():
-    await client.say('Pong!')
-
 
 @client.command(pass_context=True)
 async def echo(ctx, *args):
@@ -80,5 +52,47 @@ async def help():
 @client.command()
 async def logout():
     await client.logout()
+
+@client.event
+async def on_member_join(member):
+    with open('user.json', 'r') as f:
+        users = json.load(f)
+
+    await update_data(users, member)
+
+    with open('users.json', 'w') as f:
+        json.dump(users, f)
+
+
+@client.event
+async def on_message(message):
+    with open('user.json', 'r') as f:
+        users = json.load(f)
+
+    await update_data(users, message.author)
+    await add_experience(users, message.author, 5)
+    await level_up(users, message.author, message.channel)
+
+    with open('users.json', 'w') as f:
+        json.dump(users, f)
+
+
+async def update_data(users, user):
+    if not user.id in users:
+        users[user.id] = {}
+        users[user.id]['experience'] = 0
+        users[user.id]['level'] = 1
+
+async def add_experience(users, user, exp):
+    users[user.id]['experience'] += exp
+
+async def level_up(users, user, channel):
+    experience = users[user.id]['experience']
+    lvl_start = users[user.id]['level']
+    lvl_end = int(experience ** (1/4))
+
+    if lvl_start < lvl_end:
+        await client.send_message(channel, '{} adlı üyemiz, {} seviyesine yükseldi.'.format(user.mention, lvl_end))
+        users[user.id]['level'] = lvl_end
 
 client.run(TOKEN)
