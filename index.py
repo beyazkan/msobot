@@ -10,8 +10,6 @@ BOT_PREFIX = "_"
 client = commands.Bot(command_prefix=BOT_PREFIX)
 client.remove_command('help')
 
-lvl_goster = True
-
 @client.event
 async def on_ready():
     print("Bot çevrimiçi")
@@ -94,19 +92,9 @@ async def level_up(users, user, channel):
     lvl_start = users[user.id]['level']
     lvl_end = int(experience ** (1/4))
 
-    if lvl_goster:
-        if lvl_start < lvl_end:
-            await client.send_message(channel, '{} adlı üyemiz, seviye {} oldu. '
+    if lvl_start < lvl_end:
+        await client.send_message(channel, '{} adlı üyemiz, seviye {} oldu. '
                                                'Tebrikler...'.format(user.mention,lvl_end))
-            users[user.id]['level'] = lvl_end
-
-@client.command()
-async def lvl_kapat(lvl_goster):
-    lvl_goster = not lvl_goster
-
-    if lvl_goster:
-        await client.say("Level Sistem - Gösterim Açık")
-    else:
-        await client.say("Level Sistem - Gösterim Kapalı")
+        users[user.id]['level'] = lvl_end
 
 client.run(TOKEN)
