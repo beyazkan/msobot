@@ -1,5 +1,6 @@
 ﻿import discord
 from discord.ext import commands
+import asyncio
 from help import Help
 import json
 import os
@@ -9,6 +10,16 @@ BOT_PREFIX = "_"
 
 client = commands.Bot(command_prefix=BOT_PREFIX)
 client.remove_command('help')
+
+async def my_background_task():
+    await client.wait.until_ready()
+    counter = 0
+    channel = discord.Object(id='430347017642835969')
+
+    while not client.is_closed:
+        counter += 1
+        await client.send_message(channel, counter)
+        await asyncio.sleep(60)
 
 @client.event
 async def on_ready():
@@ -97,4 +108,5 @@ async def level_up(users, user, channel):
                                                'Tebrikler...'.format(user.mention,lvl_end))
         users[user.id]['level'] = lvl_end
 
+client.loop.create_task(my_background_task())
 client.run(TOKEN)
