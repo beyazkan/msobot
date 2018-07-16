@@ -9,7 +9,7 @@ TOKEN = os.environ.get('BOT_TOKEN')
 BOT_PREFIX = "_"
 
 client = commands.Bot(command_prefix=BOT_PREFIX)
-client.remove_command('help')
+#client.remove_command('help')
 
 extensions = ['fun']
 
@@ -53,11 +53,11 @@ async def clear(ctx, amount=100):
 
     await client.delete_messages(messages)
 
-
+"""
 @client.command(pass_context=True)
 async def help():
     yardim = Help()
-    await client.say(yardim.mesaj)
+    await client.say(yardim.mesaj)"""
 
 
 @client.command()
