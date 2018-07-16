@@ -132,5 +132,5 @@ if __name__ == '__main__':
         except Exception as error:
             print('{} eklentisi yüklenemedi. [{}]'.format(extensions, error))
 
-    client.loop.create_task(my_background_task())
+    #client.loop.create_task(my_background_task())
     client.run(TOKEN)
