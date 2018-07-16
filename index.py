@@ -12,14 +12,13 @@ client = commands.Bot(command_prefix=BOT_PREFIX)
 client.remove_command('help')
 
 async def my_background_task():
-    await client.wait.until_ready()
+    await client.wait_until_ready()
     counter = 0
     channel = discord.Object(id='430347017642835969')
-
     while not client.is_closed:
         counter += 1
         await client.send_message(channel, counter)
-        await asyncio.sleep(60)
+        await asyncio.sleep(60) # task runs every 60 seconds
 
 @client.event
 async def on_ready():
