@@ -11,6 +11,8 @@ BOT_PREFIX = "_"
 client = commands.Bot(command_prefix=BOT_PREFIX)
 client.remove_command('help')
 
+extensions = ['fun']
+
 async def my_background_task():
     await client.wait_until_ready()
     counter = 0
@@ -107,5 +109,29 @@ async def level_up(users, user, channel):
                                                'Tebrikler...'.format(user.mention,lvl_end))
         users[user.id]['level'] = lvl_end
 
-client.loop.create_task(my_background_task())
-client.run(TOKEN)
+@client.command()
+async def load(extension):
+    try:
+        client.load_extension(extensions)
+        print('{} eklenti yüklend'.format(extensions))
+    except Exception as error:
+        print('{} eklentisi yüklenemedi. [{}]'.format(extensions, error))
+
+@client.command()
+async def unload(extension):
+    try:
+        client.unload_extension(extensions)
+        print('{} eklenti kaldırıldı.'.format(extensions))
+    except Exception as error:
+        print('{} eklentisi yüklenemedi. [{}]'.format(extensions, error))
+
+
+if __name__ == '__main__':
+    for extensions in extensions:
+        try:
+            client.load_extension(extensions)
+        except Exception as error:
+            print('{} eklentisi yüklenemedi. [{}]'.format(extensions, error))
+
+    client.loop.create_task(my_background_task())
+    client.run(TOKEN)
