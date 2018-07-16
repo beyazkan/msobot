@@ -59,7 +59,6 @@ async def help():
     yardim = Help()
     await client.say(yardim.mesaj)"""
 
-
 @client.command()
 async def logout():
     await client.logout()

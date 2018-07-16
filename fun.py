@@ -6,8 +6,8 @@ class Fun:
     def __init__(self, client):
         self.client = client
 
-    async def on_message_delete(self, message):
-        await self.client.send_message(message.channel, 'Mesaj silindi.')
+    """async def on_message_delete(self, message):
+        await self.client.send_message(message.channel, 'Mesaj silindi.')"""
 
     @commands.command()
     async def ping(self):
