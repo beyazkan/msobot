@@ -8,10 +8,11 @@ import config
 class Database():
     def __init__(self):
         try:
-            self.connection = psycopg2.connect(
+            """self.connection = psycopg2.connect(
                 "dbname='"+config.DATABASE+"' user='"+config.USER+
                 "' host='"+config.HOST+"' password='"+config.PASSWORD+
-                "' port='"+config.PORT+"'")
+                "' port='"+config.PORT+"'")"""
+            self.connection = psycopg2.connect(config.DATABASE_URL, sslmode='require')
             self.connection.autocommit = True
             self.cursor = self.connection.cursor()
             #print("Veritabanı bağlantısı gerçekleşti.")
