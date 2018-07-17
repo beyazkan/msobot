@@ -1,17 +1,63 @@
-﻿import discord
+﻿import config
+import database
+import discord
 from discord.ext import commands
 import asyncio
-from help import Help
 import json
-import os
 
-TOKEN = os.environ.get('BOT_TOKEN')
-BOT_PREFIX = "_"
+veritabani = database.Database()
+client = commands.Bot(command_prefix=config.BOT_PREFIX)
+extensions = ["fun","info"]
+server_ids = list()
+servers = veritabani.server_query_all()
+member_ids = list()
+members = veritabani.uye_query_all()
+banlist = [451159673404653608, 235088799074484224, 429613776380100615,
+           201503408652419073]
 
-client = commands.Bot(command_prefix=BOT_PREFIX)
-#client.remove_command('help')
+yetkililer = [309028937852518401, 305723394266103809, 208133855675154432]
 
-extensions = ['fun']
+def yetkili_atama():
+    server = client.get_server('299946943541542913')
+    for yetki in yetkililer:
+        yetkiler = server.get_member(str(yetki))
+
+def server_kayit():
+    for i in servers:
+        server_ids.append(int(i[0]))
+
+    for svr in client.servers:
+        if not int(svr.id) in server_ids:
+            liste = list()
+            liste.append(svr.id)
+            liste.append(svr.name)
+            veritabani.server_insert(liste)
+            servers.append(liste)
+            print("{} adlı yeni server eklendi.".format(svr.name))
+
+def serverlar():
+    print('Aktif Sunucular - {}'.format(len(servers)));
+    for server in servers:
+        print('ID: {} Adı: {}'.format(server[0], server[1]))
+
+def uye_kayit():
+    for i in members:
+        member_ids.append(int(i[1]))
+
+    for server in client.servers:
+        for member in server.members:
+            if not int(member.id) in member_ids:
+                if not int(member.id) in banlist:
+                    liste = list()
+                    liste.append(member.id)
+                    liste.append(member.name.strip())
+                    liste.append(server.id)
+                    members.append(liste)
+                    veritabani.uye_insert(liste)
+
+def uyeler():
+    for member in members:
+        print(member[1])
 
 async def my_background_task():
     await client.wait_until_ready()
@@ -19,7 +65,7 @@ async def my_background_task():
     channel = discord.Object(id='430347017642835969')
     while not client.is_closed:
         counter += 1
-        await client.send_message(channel, counter)
+        #await client.send_message(channel, counter)
         await asyncio.sleep(60) # task runs every 60 seconds
 
 @client.event
@@ -29,6 +75,11 @@ async def on_ready():
     print("ID : {}".format(client.user.id))
     print(str(len(client.servers)) + " tane serverda çalışıyor.")
     print(str(len(set(client.get_all_members()))) + " tane kullanıcıya erişiyor.")
+    server_kayit()
+    serverlar()
+    uye_kayit()
+    #uyeler()
+    yetkili_atama()
 
     await client.change_presence(game=discord.Game(name='Doktorculuk'))
 
@@ -53,12 +104,6 @@ async def clear(ctx, amount=100):
 
     await client.delete_messages(messages)
 
-"""
-@client.command(pass_context=True)
-async def help():
-    yardim = Help()
-    await client.say(yardim.mesaj)"""
-
 @client.command()
 async def logout():
     await client.logout()
@@ -72,6 +117,32 @@ async def on_member_join(member):
 
     with open('users.json', 'w') as f:
         json.dump(users, f)
+
+@client.command(pass_context=True) # Here we are getting the member object
+async def duyuru(ctx, *args):
+    server = ctx.message.server
+
+    if int(ctx.message.author.id) in yetkililer:
+        output = ''
+
+        for word in args:
+            output += word
+            output += ' '
+
+        for user in members:
+            if int(ctx.message.server.id) == int(user[3]):
+                print(user[2])
+                user_id = server.get_member(str(user[1]))
+                try:
+                    await client.send_message(user_id, output)
+                    await asyncio.sleep(10)  # task runs every 60 seconds
+                except (discord.errors.Forbidden, discord.ext.commands.errors.CommandInvokeError):
+                    print("Banlayan kullanıcı: " + user[2])
+                    continue
+
+    else:
+        await client.say('Bu işlemi kullanmak için yetkiniz yok.')
+
 
 
 @client.event
@@ -104,15 +175,14 @@ async def level_up(users, user, channel):
     lvl_end = int(experience ** (1/4))
 
     if lvl_start < lvl_end:
-        await client.send_message(channel, '{} adlı üyemiz, seviye {} oldu. '
-                                               'Tebrikler...'.format(user.mention,lvl_end))
+        await client.send_message(channel, '{} adlı üyemiz, seviye {} oldu. Tebrikler...'.format(user.mention,lvl_end))
         users[user.id]['level'] = lvl_end
 
 @client.command()
 async def load(extension):
     try:
         client.load_extension(extensions)
-        print('{} eklenti yüklend'.format(extensions))
+        print('{} eklenti yüklendi'.format(extensions))
     except Exception as error:
         print('{} eklentisi yüklenemedi. [{}]'.format(extensions, error))
 
@@ -133,4 +203,4 @@ if __name__ == '__main__':
             print('{} eklentisi yüklenemedi. [{}]'.format(extensions, error))
 
     #client.loop.create_task(my_background_task())
-    client.run(TOKEN)
+    client.run(config.TOKEN)
