@@ -134,7 +134,7 @@ async def duyuru(ctx, *args):
         for user in members:
             if int(ctx.message.server.id) == int(user[3]):
                 user_id = server.get_member(str(user[1]))
-                if "Dragon" in [y.name.lower() for y in discord.Object(id=str(user[1])).roles]:
+                if "dragon" in [y.name.lower() for y in user_id.roles]:
                     try:
                         await client.send_message(user_id, output)
                         await asyncio.sleep(10)  # task runs every 60 seconds
