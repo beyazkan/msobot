@@ -135,16 +135,17 @@ async def duyuru(ctx, *args):
             if int(ctx.message.server.id) == int(user[3]):
                 print(user[2])
                 user_id = server.get_member(str(user[1]))
-                try:
-                    await client.send_message(user_id, output)
-                    await asyncio.sleep(10)  # task runs every 60 seconds
-                except (discord.errors.Forbidden, discord.ext.commands.errors.CommandInvokeError):
-                    liste = list()
-                    liste.append(user[1])
-                    liste.append(user[2])
-                    bot_banlayanlar.append(liste)
-                    print("Banlayan Kullanıcı: " + user[2])
-                    continue
+                if "Dragon" in [y.name.lower() for y in user_id.roles]:
+                    try:
+                        await client.send_message(user_id, output)
+                        await asyncio.sleep(10)  # task runs every 60 seconds
+                    except (discord.errors.Forbidden, discord.ext.commands.errors.CommandInvokeError):
+                        liste = list()
+                        liste.append(user[1])
+                        liste.append(user[2])
+                        bot_banlayanlar.append(liste)
+                        print("Banlayan Kullanıcı: " + user[2])
+                        continue
 
     else:
         await client.say('Bu işlemi kullanmak için yetkiniz yok.')
