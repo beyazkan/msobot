@@ -17,6 +17,8 @@ banlist = [451159673404653608, 235088799074484224, 429613776380100615,
 
 yetkililer = [309028937852518401, 305723394266103809, 208133855675154432]
 
+bot_banlayanlar = list()
+
 def yetkili_atama():
     server = client.get_server('299946943541542913')
     for yetki in yetkililer:
@@ -137,13 +139,25 @@ async def duyuru(ctx, *args):
                     await client.send_message(user_id, output)
                     await asyncio.sleep(10)  # task runs every 60 seconds
                 except (discord.errors.Forbidden, discord.ext.commands.errors.CommandInvokeError):
-                    print("Banlayan kullanıcı: " + user[2])
+                    liste = list()
+                    liste.append(user[1])
+                    liste.append(user[2])
+                    bot_banlayanlar.append(liste)
+                    print("Banlayan Kullanıcı: " + user[2])
                     continue
 
     else:
         await client.say('Bu işlemi kullanmak için yetkiniz yok.')
 
+# Botu banlayan kişilerin listelemesini gerçekleştirme
+@client.command(pass_context=True)
+async def bot_banlayan(ctx):
+    output = ''
+    for user in bot_banlayanlar:
+        output += user[1] + ' - ' + user[2] + ',\n'
+        output += "Lütfen bu kişiler ile görüşme sağlayıp, banlarını kaldırmalarını rica edin."
 
+    await client.say(output)
 
 @client.event
 async def on_message(message):
