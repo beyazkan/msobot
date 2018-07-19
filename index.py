@@ -154,7 +154,7 @@ async def duyuru(ctx, *args):
 async def bot_banlayan(ctx):
     output = ''
     for user in bot_banlayanlar:
-        output += user[1] + ' - ' + user[2] + ',\n'
+        output += user[0] + ' - ' + user[1] + ',\n'
     output += "Lütfen bu kişiler ile görüşme sağlayıp, banlarını kaldırmalarını rica edin."
 
     await client.say(output)
