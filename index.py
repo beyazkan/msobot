@@ -19,7 +19,7 @@ yetkililer = [config.YETKILI_1, config.YETKILI_2, config.YETKILI_3]
 bot_banlayanlar = list()
 
 def yetkili_atama():
-    server = client.get_server(str(config.SERVER_ID))
+    server = client.get_server(config.SERVER_ID)
     for yetki in yetkililer:
         yetkiler = server.get_member(str(yetki))
 
