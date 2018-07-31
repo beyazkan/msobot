@@ -80,7 +80,7 @@ async def on_ready():
     serverlar()
     uye_kayit()
     #uyeler()
-    yetkili_atama()
+    #yetkili_atama()
 
     await client.change_presence(game=discord.Game(name='Doktorculuk'))
 
@@ -136,6 +136,7 @@ async def duyuru(ctx, *args):
                 if config.PERM in [y.name.lower() for y in user_id.roles]:
                     try:
                         await client.send_message(user_id, output)
+                        print("{} adlı kullanıcıya mesaj gönderildi.".format(user_id))
                         await asyncio.sleep(config.DUYURU_SURESI)  # task runs every 10 seconds
                     except (discord.errors.Forbidden, discord.ext.commands.errors.CommandInvokeError):
                         liste = list()
