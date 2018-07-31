@@ -12,15 +12,14 @@ server_ids = list()
 servers = veritabani.server_query_all()
 member_ids = list()
 members = veritabani.uye_query_all()
-banlist = [451159673404653608, 235088799074484224, 429613776380100615,
-           201503408652419073]
 
-yetkililer = [309028937852518401, 305723394266103809, 208133855675154432]
+banlist = [451159673404653608, 235088799074484224, 429613776380100615, 201503408652419073]
+yetkililer = [config.YETKILI_1, config.YETKILI_2, config.YETKILI_3]
 
 bot_banlayanlar = list()
 
 def yetkili_atama():
-    server = client.get_server('299946943541542913')
+    server = client.get_server(str(config.SERVER_ID))
     for yetki in yetkililer:
         yetkiler = server.get_member(str(yetki))
 
@@ -134,10 +133,10 @@ async def duyuru(ctx, *args):
         for user in members:
             if int(ctx.message.server.id) == int(user[3]):
                 user_id = server.get_member(str(user[1]))
-                if "dragon" in [y.name.lower() for y in user_id.roles]:
+                if config.PERM in [y.name.lower() for y in user_id.roles]:
                     try:
                         await client.send_message(user_id, output)
-                        await asyncio.sleep(10)  # task runs every 60 seconds
+                        await asyncio.sleep(config.DUYURU_SURESI)  # task runs every 10 seconds
                     except (discord.errors.Forbidden, discord.ext.commands.errors.CommandInvokeError):
                         liste = list()
                         liste.append(user[1])
