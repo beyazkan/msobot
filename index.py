@@ -14,7 +14,7 @@ member_ids = list()
 members = veritabani.uye_query_all()
 
 banlist = [451159673404653608, 235088799074484224, 429613776380100615, 201503408652419073]
-yetkililer = [config.YETKILI_1, config.YETKILI_2, config.YETKILI_3]
+yetkililer = [int(config.YETKILI_1), int(config.YETKILI_2), int(config.YETKILI_3)]
 
 bot_banlayanlar = list()
 
