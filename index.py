@@ -137,7 +137,7 @@ async def duyuru(ctx, *args):
                     try:
                         await client.send_message(user_id, output)
                         print("{} adlı kullanıcıya mesaj gönderildi.".format(user_id))
-                        await asyncio.sleep(config.DUYURU_SURESI)  # task runs every 10 seconds
+                        await asyncio.sleep(int(config.DUYURU_SURESI))  # task runs every 10 seconds
                     except (discord.errors.Forbidden, discord.ext.commands.errors.CommandInvokeError):
                         liste = list()
                         liste.append(user[1])
